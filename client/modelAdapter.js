@@ -21,20 +21,7 @@ ModelAdapter.prototype.getPlayersInformation = function() {
 	}
 
 
-	return [
-		{"id": 1,
-		"username": "nick",
-		"active": false,
-		"score": 25},
-		{"id": 3,
-		"username": "andrea",
-		"active": true,
-		"score": 15},
-		{"id": 7,
-		"username": "mickey",
-		"active": false,
-		"score": 37},
-	];
+	return playersInformation;
 }
 
 ModelAdapter.prototype.getTileAt = function(row, col) {

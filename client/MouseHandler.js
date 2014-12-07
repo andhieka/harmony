@@ -9,7 +9,7 @@ MouseIO.prototype.initializeMouseListener = function() {
 }
 
 MouseIO.prototype.handleEvent = function(e) {
-	if (e.type == 'mousemove') {
+	if (e.type == 'mousedown') {
 		this.checkFocusWithCardDeck(e.x - this.canvasDOM.leftOffset, e.y - this.canvasDOM.topOffset);
 		this.checkFocusWithTiles(e.x - this.canvasDOM.leftOffset, e.y - this.canvasDOM.topOffset);
 	}
@@ -17,7 +17,7 @@ MouseIO.prototype.handleEvent = function(e) {
 
 MouseIO.prototype.checkFocusWithCardDeck = function(left, top) {
 	if (this.isInsideBoundingBox(left, top, CARDDECK_LEFT, CARDDECK_TOP, CARDDECK_LEDGE_WIDTH, GAMEBOARD_TILEWIDTH)) {
-		for (var i = 0; i < this.view) ///////////
+		for (var i = 0; i < this.view.
 	}
 }
 
