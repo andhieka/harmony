@@ -24,3 +24,9 @@ ModelAdapter.prototype.getPlayersInformation = function() {
 		"score": 37},
 	];
 }
+
+ModelAdapter.prototype.getTileAt = function(row, col) {
+	//return the tile located at row, col of boardgame
+	//or return emptyNote
+	return new NoteTile('F#');
+}

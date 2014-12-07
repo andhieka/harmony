@@ -9,3 +9,49 @@
 #polkadot {
 	z-index: 0;
 }
+
+#player_list_board {
+	color: white;
+	position: absolute;
+	border: 1px solid black;
+	width: 200px;
+	height: 300px;
+	border-radius: 10px;
+	left: 110px;
+	top: 160px;
+	background-color: rgba(0,0,0,0.8);
+}
+
+#player_list_title {
+	padding-top:7px;
+	padding-left: 6px;
+	padding-bottom: 4px;
+}
+
+#leaderboard {
+	background-color: rgba(255,255,255,0.3);
+	height: 100%;
+}
+
+#username, #score {
+	width: 40%;
+	display: inline-block;
+	margin-left: 10px;
+	margin-top: 10px;
+}
+
+#score {
+	text-align: right;
+}
+
+.activePlayer {
+	background-color: rgba(240, 240, 0, 0.4);
+}
+
+#timer {
+	position: absolute;
+	right: 250px;
+	color: white;
+	text-shadow: 0 0 3px black;
+	font-size: 4em;
+}

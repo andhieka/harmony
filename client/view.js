@@ -2,40 +2,59 @@ var GAMEBOARD_TOP = 20;
 var GAMEBOARD_LEFT = 270;
 var GAMEBOARD_SIDELENGTH = 500;
 var GAMEBOARD_DIMENSION = 8;
+var GAMEBOARD_TILEWIDTH = GAMEBOARD_SIDELENGTH / GAMEBOARD_DIMENSION;
 var NOTETILE_FONT_RATIO = 0.6;
 var NOTETILE_MARGIN_LEFT = 10;
 var NOTETILE_MARGIN_TOP = 10;
-var TILE_COLOR = "rgba(212,132,35,1)";
+var TILE_COLOR = "rgba(205,224,94,0.85)";
 var TILE_STROKE_COLOR = "rgba(40, 40, 40, 0.9)";
-var GRID_HIGH_COLOR = "rgba(240, 90, 0, 0.9)";
-var GRID_MID_COLOR = "rgba(200, 200, 120, 0.9)";
-var GRID_LOW_COLOR = "rgba(0, 10, 200, 0.9)";
+var GRID_HIGH_COLOR = "rgba(250, 0, 0, 0.07)";
+//var GRID_MID_COLOR = "rgba(200, 200, 120, 0.9)";
+//var GRID_LOW_COLOR = "rgba(0, 10, 200, 0.9)";
+var GRID_GLASS_COLOR = "rgba(255,255,255,0.6)";
+//var GRID_HIGH_COLOR = {'xoffset': 242, 'yoffset': 392};
+//var GRID_MID_COLOR = {'xoffset': 0, 'yoffset': 0};
+var GRID_SIZE = 45;
 var CARDDECK_TOP = 560;
 var CARDDECK_LEFT = 270;
-var CARDDECK_COLOR = "rgba(200, 200, 10, 0.9)";
+var CARDDECK_COLOR = "rgba(102, 58, 4, 0.9)";
 var CARDDECK_LEG_WIDTH = 30;
 var CARDDECK_LEG_HEIGHT = 70;
-var CARDDECK_LEDGE_WIDTH = 500;
+var CARDDECK_LEDGE_WIDTH = 510;
 var CARDDECK_LEDGE_HEIGHT = 5;
 var DECKCARD_MARGIN = 2;
+var TIME_ALLOWED = 10;
 
-function View(graphics){
+function View(graphics, LeaderBoardDOM, modelAdapter){
+	this.modelAdapter = modelAdapter;
 	this.graphics = graphics;
+	this.LeaderBoardDOM = LeaderBoardDOM;
+	this.gameBoardView = new GameBoardView(GAMEBOARD_LEFT, GAMEBOARD_TOP, GAMEBOARD_SIDELENGTH, GAMEBOARD_DIMENSION);
+	this.cardDeck = new CardDeck(CARDDECK_LEFT, CARDDECK_TOP);
+	this.leaderBoard = new LeaderBoard();
+}
 
+View.prototype.setCurrentUserID = function(currentUserID) {
+	this.leaderBoard.setCurrentUserID(currentUserID);
+}
+
+View.prototype.initialize = function() {
+	this.showGameBoard(this.graphics);
+	this.showCardDeck(this.graphics);
+	this.showLeaderBoard(this.leaderBoardDOM);
 }
 
 View.prototype.showGameBoard = function() {
-
-}
-
-View.prototype.showScoreBoard = function() {
-
+	this.gameBoardView.initialize(this.graphics);
 }
 
 View.prototype.showCardDeck = function() {
-
+	this.cardDeck.drawDeck(this.graphics);
 }
 
+View.prototype.showLeaderBoard = function() {
+	this.leaderBoard.updateLeaderBoard(this.modelAdapter, this.LeaderBoardDOM);
+}
 
 
 function GameBoardView(left, top, sideLength, dimension) {
@@ -70,20 +89,20 @@ GameBoardView.prototype.drawGrid = function(graphics) {
 
 GameBoardView.prototype.markScoresOnGrid = function(graphics) {
 	for(var i = 0; i < this.dimension; ++i) {
-		this.drawRect(i, i, TILE_STROKE_COLOR, GRID_HIGH_COLOR, graphics);
-		this.drawRect(i, this.dimension-i-1, TILE_STROKE_COLOR, GRID_HIGH_COLOR, graphics);
+		for(var j = 0; j < this.dimension; ++j) {
+			this.drawRect(i, j, TILE_STROKE_COLOR, GRID_GLASS_COLOR, graphics);
+		}
+	}
+	for(var i = 0; i < this.dimension; ++i) {
+		//this.drawRect(i, i, TILE_STROKE_COLOR, GRID_HIGH_COLOR, graphics);
+		//this.drawRect(i, this.dimension-i-1, TILE_STROKE_COLOR, GRID_HIGH_COLOR, graphics);
 		this.drawRect(i, 0, TILE_STROKE_COLOR, GRID_HIGH_COLOR, graphics);
 		this.drawRect(0, i, TILE_STROKE_COLOR, GRID_HIGH_COLOR, graphics);
 		this.drawRect(this.dimension-1, i, TILE_STROKE_COLOR, GRID_HIGH_COLOR, graphics);
 		this.drawRect(i, this.dimension-1, TILE_STROKE_COLOR, GRID_HIGH_COLOR, graphics);
 	}
-	for(var i = 1; i < this.dimension - 1; ++i) {
-		this.drawRect(i, 1, TILE_STROKE_COLOR, GRID_MID_COLOR, graphics);
-		this.drawRect(1, i, TILE_STROKE_COLOR, GRID_MID_COLOR, graphics);
-		this.drawRect(this.dimension-2, i, TILE_STROKE_COLOR, GRID_MID_COLOR, graphics);
-		this.drawRect(i, this.dimension-2, TILE_STROKE_COLOR, GRID_MID_COLOR, graphics);
-	}
 }
+
 
 GameBoardView.prototype.drawRect = function(row, col, strokeColor, fillColor, graphics) {
 	graphics.fillStyle = fillColor;
@@ -91,6 +110,13 @@ GameBoardView.prototype.drawRect = function(row, col, strokeColor, fillColor, gr
 	graphics.strokeStyle = strokeColor;
 	graphics.strokeRect(this.left + this.tileWidth * col, this.top + this.tileWidth * row, this.tileWidth, this.tileWidth);
 }
+/*
+GameBoardView.prototype.drawRect = function(row, col, strokeColor, type, graphics) {
+	var tile = assetManager.getAsset('glass.jpg');
+	//graphics.drawImage(tile, type.xoffset, type.yoffset, GRID_SIZE, GRID_SIZE, this.left + this.tileWidth * col, this.top + this.tileWidth * row, this.tileWidth, this.tileWidth);
+
+}
+*/
 
 GameBoardView.prototype.drawTile = function(row, col, tile, graphics) {
 	tile.drawSelf(this.left + col * this.tileWidth, this.top + row * this.tileWidth, this.tileWidth, graphics);
@@ -155,6 +181,72 @@ CardDeck.prototype.drawTiles = function(graphics) {
 	for (var i = 0; i < this.cardStack.length; ++i) {
 		this.cardStack[i].drawSelf(this.left + i * (DECKCARD_MARGIN + GAMEBOARD_SIDELENGTH / GAMEBOARD_DIMENSION), this.top, GAMEBOARD_SIDELENGTH / GAMEBOARD_DIMENSION, graphics);
 	}
+}
+
+
+function LeaderBoard() {
+	this.currentUserID = 0;
+}
+
+LeaderBoard.prototype.setCurrentUserID = function(currentUserID) {
+	this.currentUserID = currentUserID;
+}
+
+LeaderBoard.prototype.updateLeaderBoard = function(modelAdapter, DOM) {
+	this.clearLeaderBoard(DOM);
+	var playersInformation = modelAdapter.getPlayersInformation();
+	this.displayOnLeaderBoard(playersInformation, DOM);
+}
+
+LeaderBoard.prototype.clearLeaderBoard = function(DOM) {
+	while(DOM.firstChild) {
+		DOM.removeChild(DOM.firstChild);
+	}
+}
+
+LeaderBoard.prototype.displayOnLeaderBoard = function(playersInformation, DOM) {
+	this.sortPlayersInformation(playersInformation);
+	for(var i = 0; i < playersInformation.length; ++i) {
+		LeaderBoard.prototype.appendToBoard(playersInformation[i], DOM);
+	}
+}
+
+LeaderBoard.prototype.sortPlayersInformation = function(playersInformation) {
+	for(var i = 0; i < playersInformation.length; ++i) {
+		var j = i;
+		while(j > 0 && playersInformation[j].score > playersInformation[j-1].score) {
+			var temp = playersInformation[j];
+			playersInformation[j] = playersInformation[j-1];
+			playersInformation[j-1] = temp;
+			--j;
+		}
+	}
+}
+
+LeaderBoard.prototype.appendToBoard = function(playerInformation, DOM) {
+	DOM.innerHTML += '<div id="player_info" '
+				+ (playerInformation.active ? 'class="activePlayer"' : '') + '>' 
+				+ '<div id="username"> ' + playerInformation.username + ' </div>'
+				+ '<div id="score">' + playerInformation.score + '</div>'
+				+ '</div>';
+}
+
+function TimerDisplay(DOM) {
+	this.DOM = DOM;
+}
+
+TimerDisplay.prototype.countDown = function() {
+	var innerThis = this;
+	this.startingTime = Date.now();
+	var loop = setInterval(function() {
+		var timeElapsed = Date.now() - innerThis.startingTime;
+		var timeRemaining = TIME_ALLOWED - timeElapsed/1000;
+		if(timeRemaining <= 0) {
+			timeRemaining = 0;
+			clearInterval(loop);
+		}
+		innerThis.DOM.innerHTML = parseInt(timeRemaining);
+	})
 }
 
 
