@@ -8,6 +8,7 @@ function Board(key) {
 		this.board[i] = new Array(BOARD_WIDTH);
 	}
 	this.setKey(key);
+
 	var rmedian = Math.floor((BOARD_HEIGHT-1)/2);
 	var cmedian = Math.floor((BOARD_WIDTH-1)/2);
 	this.board[rmedian][cmedian] = this.key;
@@ -106,6 +107,16 @@ Board.prototype.print = function() {
 		}
 		console.log(row);
 	}
+};
+
+Board.prototype.toJson = function() {
+	return JSON.stringify({'key': this.key, 'board': this.board});
+};
+
+Board.prototype.updateFromJson = function(json_object) {
+	var obj = JSON.parse(json_object);
+	this.key = obj.key;
+	this.board = obj.board;
 };
 
 function testBoard() {
