@@ -35,3 +35,4 @@ SoundEngine.prototype.setupPlayers = function() {
 	}
 };
 
+var soundEngine = new SoundEngine();

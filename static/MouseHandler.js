@@ -4,7 +4,6 @@ function MouseIO(canvasDOM, view) {
 }
 
 MouseIO.prototype.initializeMouseListener = function() {
-	canvasDOM.addEventListener('mousemove', this);
 	canvasDOM.addEventListener('mousedown', this);
 }
 

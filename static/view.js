@@ -22,7 +22,7 @@ var CARDDECK_LEG_WIDTH = 30;
 var CARDDECK_LEG_HEIGHT = 70;
 var CARDDECK_LEDGE_WIDTH = 510;
 var CARDDECK_LEDGE_HEIGHT = 5;
-var DECKCARD_MARGIN = 2;
+var DECKCARD_MARGIN = 0;
 var TIME_ALLOWED = 10;
 
 function View(graphics, LeaderBoardDOM, modelAdapter){
@@ -118,6 +118,15 @@ GameBoardView.prototype.drawRect = function(row, col, strokeColor, type, graphic
 }
 */
 
+GameBoardView.prototype.drawTiles = function(graphics) {
+	for (var i = 0; i < this.dimension; ++i) {
+		for(var j = 0; j < this.dimension; ++j) {
+			if(gameBoard.getContent(i,j) == false) continue;
+			this.drawTile(i, j, new NoteTile(gameBoard.getContent(i,j)), graphics);
+		}
+	}
+}
+
 GameBoardView.prototype.drawTile = function(row, col, tile, graphics) {
 	tile.drawSelf(this.left + col * this.tileWidth, this.top + row * this.tileWidth, this.tileWidth, graphics);
 }
@@ -177,9 +186,10 @@ CardDeck.prototype.drawDeck = function(graphics) {
 	graphics.strokeRect(this.left, this.top + GAMEBOARD_SIDELENGTH / GAMEBOARD_DIMENSION, CARDDECK_LEDGE_WIDTH, CARDDECK_LEDGE_HEIGHT);
 }
 
-CardDeck.prototype.drawTiles = function(graphics) {
-	for (var i = 0; i < this.cardStack.length; ++i) {
-		this.cardStack[i].drawSelf(this.left + i * (DECKCARD_MARGIN + GAMEBOARD_SIDELENGTH / GAMEBOARD_DIMENSION), this.top, GAMEBOARD_SIDELENGTH / GAMEBOARD_DIMENSION, graphics);
+CardDeck.prototype.drawTiles = function(cardStack, graphics) {
+	for (var i = 0; i < cardStack.length; ++i) {
+		var nt = new NoteTile(CHOICES[cardStack[i]])
+		nt.drawSelf(this.left + i * (DECKCARD_MARGIN + GAMEBOARD_SIDELENGTH / GAMEBOARD_DIMENSION), this.top, GAMEBOARD_SIDELENGTH / GAMEBOARD_DIMENSION, graphics);
 	}
 }
 
@@ -233,20 +243,28 @@ LeaderBoard.prototype.appendToBoard = function(playerInformation, DOM) {
 
 function TimerDisplay(DOM) {
 	this.DOM = DOM;
+	this.countingDown = false;
+	this.loop = {};
 }
 
 TimerDisplay.prototype.countDown = function() {
+	if(this.countingDown) return;
 	var innerThis = this;
 	this.startingTime = Date.now();
-	var loop = setInterval(function() {
+	this.countingDown = true;
+	this.loop = setInterval(function() {
 		var timeElapsed = Date.now() - innerThis.startingTime;
 		var timeRemaining = TIME_ALLOWED - timeElapsed/1000;
 		if(timeRemaining <= 0) {
 			timeRemaining = 0;
-			clearInterval(loop);
+			clearInterval(innerThis.loop);
+			innerThis.countingDown = false;
 		}
 		innerThis.DOM.innerHTML = parseInt(timeRemaining);
 	})
 }
 
-
+TimerDisplay.prototype.reset = function() {
+	this.countingDown = false;
+	clearInterval(this.loop);
+}

@@ -10,13 +10,13 @@ ModelAdapter.prototype.getPlayersInformation = function() {
 	// player ID, player name, score, active player
 	// format:
 	var playersInformation = [];
-	var players = harmonyModel.getPlayers();
+	var players = this.harmonyModel.getPlayers();
 	for (var i = 0; i < players.length; ++i) {
 		playersInformation.push({
 			"id": players[i].getId(),
-			"username": players[i].getName();
-			"active": harmonyModel.isActivePlayer(players[i]),
-			"score": players[i].getScore();
+			"username": players[i].getName(),
+			"active": this.harmonyModel.isActivePlayer(players[i]),
+			"score": players[i].getScore(),
 		});
 	}
 
