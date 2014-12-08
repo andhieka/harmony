@@ -156,7 +156,7 @@ function registerEventListeners() {
 		}
 	});
 	makeMoveButton.addEventListener('mousedown', function(e) {
-		var successfulMove = makeMove(selectedTile.row, selectedTile.col, CHOICES[selectedDeckCard]);
+		var successfulMove = makeMove(selectedTile.row, selectedTile.col, CHOICES[playerDeck[selectedDeckCard]]);
 		if(successfulMove) {
 			playerDeck.splice(selectedDeckCard, 1);
 			DOMDisplay.getContext('2d').clearRect(0, 0, 1024, 640);
