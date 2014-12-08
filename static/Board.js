@@ -14,6 +14,13 @@ function Board(key) {
 	this.board[rmedian][cmedian] = this.key;
 }
 
+
+Board.prototype.getContent = function(row, col) {
+	//return false if empty!!!
+	if(this.board[row][col] === undefined) return false;
+	return this.board[row][col];
+}
+
 // Methods for initialization
 Board.prototype.setKey = function(key) {
 	this.key = key;
@@ -24,10 +31,10 @@ Board.prototype.setKey = function(key) {
 // returns the maximum score possible if the placement is successful
 Board.prototype.placeCard = function(row, col, card) {
 	if (this.board[row][col] != undefined) {
-		throw "This space is not free.";
+		return false;
 	}
 	if (!this.isValidPosition(row, col)) {
-		throw "Invalid position!";
+		return false;
 	} 
 
 	//Put card and see if it generates any points
@@ -36,6 +43,14 @@ Board.prototype.placeCard = function(row, col, card) {
 	var vStreak = this.getVerticalStreak(row, col);
 	var hResult = this.analyzer.analyze(hStreak);
 	var vResult = this.analyzer.analyze(vStreak);
+
+	if (hResult != INVALID_SEQUENCE) {
+		soundEngine.playNotes(hStreak);
+	} else {
+		if (vResult != INVALID_SEQUENCE) {
+			soundEngine.playNotes(vStreak);
+		}
+	}
 
 	//if it does not generate any point, cancel move
 	if (hResult.getScore() == 0 && vResult.getScore() == 0) {

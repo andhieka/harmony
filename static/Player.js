@@ -1,8 +1,8 @@
-
 function Player(id, name) {
 	this.score = 0;
 	this.name = name;
 	this.id = id;
+	this.active = false;
 }
 
 Player.prototype.getId = function() {
@@ -20,3 +20,11 @@ Player.prototype.getScore = function() {
 Player.prototype.addScore = function(score) {
 	this.score += score;
 };
+
+Player.prototype.setActive = function(activity) {
+	this.active = activity;
+}
+
+Player.prototype.isActive = function() {
+	return this.active;
+}

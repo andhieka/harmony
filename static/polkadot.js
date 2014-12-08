@@ -15,7 +15,4 @@ function startPolkadotBackground() {
 		if(polkadotTop > 640) polkadotTop = 0;
 	}, 1000/60);
 
-	document.addEventListener('keydown', function(e){
-		if(e.which == 80) clearInterval(loopPolkadot);
-	})
 }

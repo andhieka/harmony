@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
 	display = document.getElementById('display');
 	leaderBoard = document.getElementById('leaderboard');
 	timerBoard = document.getElementById('timer');
-	modelAdapter = new ModelAdapter();
+	modelAdapter = new ModelAdapter(new HarmonyModel());
 	assetManager = new AssetManager();
 	for(var i = 0; i < assetQueue.length; ++i) {
 		assetManager.insertQueue(assetQueue[i]);

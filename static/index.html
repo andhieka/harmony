@@ -2,7 +2,8 @@
 <html>
 <head>
 	<link rel="stylesheet" href="harmony.css">
-	<script src="view_test.js"></script>
+	<!--<script src="view_test.js"></script>-->
+	<script src="HarmonyMain.js"></script>
 	<script src="view.js"></script>
 	<script src="polkadot.js"></script>
 	<script src="modelAdapter.js"></script>
@@ -12,6 +13,9 @@
 	<script type="text/javascript" src="ChordAnalyzer.js"></script>
 	<script type="text/javascript" src="Result.js"></script>
 	<script type="text/javascript" src="Testing.js"></script>
+	<script type="text/javascript" src="SoundPlayer.js"></script>
+	<script type="text/javascript" src="SoundEngine.js"></script>
+	<script src="Player.js"></script>
 </head>
 <body>
 	<canvas id="display" width="1024" height="640">Your browser does not support canvas. :(</canvas>
@@ -19,7 +23,12 @@
 	<div id="player_list_board">
 		<div id="player_list_title">leaders board</div>
 		<div id="leaderboard"></div>
+		<div id="status"></div>
 	</div>
 	<div id="timer"></div>
+	<div id="deckselector"></div>
+	<div id="tileselector"></div>
+	<div id="makemovebutton">Place the Note</div>
+	<div id="announcer"></div>
 </body>
 </html>
