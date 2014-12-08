@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login to Harmony</title>
+</head>
+<body>
+	<h1>Login</h1>
+	<form action="" method="POST" name="login">	
+		{{ form.hidden_tag() }}
+    
+		<p>Please enter your alias to play</p>
+		<p>Name: {{ form.name(size=50) }}</p>
+		<p><input type="submit" value="Play"></p>
+	</form>
+</body>
+</html>
