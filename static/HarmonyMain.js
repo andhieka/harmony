@@ -65,7 +65,7 @@ RoomInformationAJAX.prototype.getCommandStack = function() {
 }
 
 
-var CHOICES = ['C', 'C#', 'D', 'D#', 'E', 'G', 'G#', 'F', 'F#', 'A', 'A#', 'B'];
+var CHOICES = ['C', 'C', 'D', 'D', 'E', 'G', 'G', 'F', 'F', 'A', 'A', 'B'];
 var NUM_DECK = 8;
 var PRIME_RANDOMIZER = 313;
 var PRIME_SHIFTER = 13;
@@ -134,15 +134,19 @@ function getInitialGameState() {
 	gameBoard = new Board(roomInformation.getKey());
 	initializePlayerDeck();
 	registerEventListeners();
-	gameLoop();
+	//gameLoop();
 }
 
 function initializePlayerDeck() {
 	for(var i = 0; i < NUM_DECK; ++i) {
-		var curtime = Date.now();
-		var mod = (curtime + i * i * PRIME_SHIFTER * PRIME_SHIFTER) % PRIME_RANDOMIZER;
-		playerDeck.push(mod%12);
+		randomDeckGetter(i);
 	}
+}
+
+function randomDeckGetter(i) {
+	var curtime = Date.now();
+	var mod = ((curtime % PRIME_SHIFTER)* PRIME_SHIFTER * PRIME_SHIFTER * i) % PRIME_RANDOMIZER;
+	playerDeck.push(mod%12);
 }
 
 function registerEventListeners() {
@@ -159,6 +163,7 @@ function registerEventListeners() {
 		var successfulMove = makeMove(selectedTile.row, selectedTile.col, CHOICES[playerDeck[selectedDeckCard]]);
 		if(successfulMove) {
 			playerDeck.splice(selectedDeckCard, 1);
+			randomDeckGetter(20)
 			DOMDisplay.getContext('2d').clearRect(0, 0, 1024, 640);
 			view.initialize();
 			view.cardDeck.drawTiles(playerDeck, view.graphics);
@@ -232,11 +237,11 @@ function makeMove(row, col, tile) {
 		commandStack.push({"row": row, "col": col, "tile": tile});
 		var result = gameBoard.placeCard(row, col, tile);
 		var valid = false;
-		var allMessages;
+		var allMessages = "";
 		for (var i = 0; i < result.length; i++) {
-			if (result[i].message != INVALID_SEQUENCE) {
+			if (result[i].message !== INVALID_SEQUENCE) {
 				currentPlayer.addScore(result[i].score);
-				allMessages += result[i].getMessage() + " ";
+				allMessages += result[i].getMessage() + "<br>";
 				valid = true;
 			}
 		}

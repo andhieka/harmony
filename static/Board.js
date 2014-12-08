@@ -44,10 +44,10 @@ Board.prototype.placeCard = function(row, col, card) {
 	var hResult = this.analyzer.analyze(hStreak);
 	var vResult = this.analyzer.analyze(vStreak);
 
-	if (hResult != INVALID_SEQUENCE) {
+	if (hResult.message != INVALID_SEQUENCE) {
 		soundEngine.playNotes(hStreak);
 	} else {
-		if (vResult != INVALID_SEQUENCE) {
+		if (vResult.message != INVALID_SEQUENCE) {
 			soundEngine.playNotes(vStreak);
 		}
 	}
