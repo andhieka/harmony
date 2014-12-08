@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, redirect, render_template, session
+from flask import Flask, jsonify, redirect, render_template, session, request
 from flask.ext.sqlalchemy import SQLAlchemy
 
 import logging
@@ -94,9 +94,9 @@ class Room(db.Model):
 			'active_player_id': self.get_active_player_id(),
 			'num_of_players': self.num_of_players,
 			'key': self.key,
-			'players': [p.serialize for p in players],
-			'board': board,
-			'stack': [o.serialize for o in ops]
+			'players': [p.serialize for p in self.players],
+			'board': self.board,
+			'stack': [o.serialize for o in self.operations]
 		}
 
 class Operation(db.Model):
@@ -133,9 +133,6 @@ if Room.query.all() == []:
 	db.session.add(r1)
 	db.session.add(r2)
 	db.session.commit()
-
-
-
 
 
 
@@ -186,13 +183,9 @@ def rooms():
 
 @app.route('/api/rooms/<room_number>', methods=['GET']) #, 'POST'])
 def roomInfo(room_number):
-	if (request.method == 'GET'):
-		room = Room.query.get(room_number)
-		return jsonify(room.serialize())
+	room = Room.query.get(room_number)
+	return jsonify(room=room.serialize)
 	
-	# GET: Send game state of this room
-	# PUT: 
-	return
 
 @app.route('/api/player/info')
 def showPlayerInfo():
