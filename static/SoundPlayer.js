@@ -3,7 +3,7 @@ var NOTE_DURATION = 1500; //millis
 function SoundPlayer(audioCtx, frequency) {
 	var osc = audioCtx.createOscillator();
 	osc.frequency.value = frequency;
-	osc.type = osc.SQUARE;
+	osc.type = osc.SINE;
 	osc.start(0);
 
 	var vol = audioCtx.createGain();
@@ -17,7 +17,7 @@ function SoundPlayer(audioCtx, frequency) {
 }
 
 SoundPlayer.prototype.play = function() {
-	this.vol.gain.value = 0.3;
+	this.vol.gain.value = 0.2;
 	function turnOff(x) {
 		return function() {
 			x.gain.value = 0;

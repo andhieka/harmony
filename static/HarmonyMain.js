@@ -232,7 +232,8 @@ function makeMove(row, col, tile) {
 		commandStack.push({"row": row, "col": col, "tile": tile});
 		var result = gameBoard.placeCard(row, col, tile);
 		var valid = false;
-		var allMessages;
+		var allMessages = "";
+		console.log(result);
 		for (var i = 0; i < result.length; i++) {
 			if (result[i].message != INVALID_SEQUENCE) {
 				currentPlayer.addScore(result[i].score);
